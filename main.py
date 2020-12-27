@@ -44,8 +44,10 @@ class RegisteredScreen(MDScreen):
 class RegisterScreen(RegisterScreenBase):
     pass
 
+
 class LoginScreen(LoginScreenBase):
     pass
+
 
 class MedX(MDApp):
 

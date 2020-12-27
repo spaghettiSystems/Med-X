@@ -8,6 +8,7 @@ from generic_kvs import standard_vbox
 
 from generic_kvs import standard_textfield
 
+
 class GenericFormScreen(MDScreen):
     datePattern = re.compile('^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[012])[-/](19|20)\d\d$')
     emailPattern = re.compile(
