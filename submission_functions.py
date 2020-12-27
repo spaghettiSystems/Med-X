@@ -4,13 +4,14 @@ def back(instance):
 
 def register(instance):
     screen = instance.parent.parent.parent  # type: RegisterScreen
-    form_dict = screen.verify_and_get_values()
-    print(form_dict)
+    if screen.verify_inputs():
+        form_dict = screen.get_form_values()
+        print(form_dict)
         # TODO: DB stuff goes here.
 
 
 def login(instance):
     screen = instance.parent.parent.parent  # type: LoginScreen
-    login_dict = screen.verify_and_get_values()
-    print(login_dict)
+    if screen.verify_inputs():
+        login_dict = screen.get_form_values()
         # TODO: DB stuff goes here.

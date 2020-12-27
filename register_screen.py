@@ -4,8 +4,7 @@ from kivymd.uix.label import MDLabel
 
 from generic_form_screen import GenericFormScreen
 from submission_functions import back, register
-from generic_kvs import standard_textfield, standard_checkbox, standard_button
-from textfield_filters import name_filter, dob_filter, datePattern, emailPattern
+from generic_kvs import standard_checkbox, standard_button
 
 
 class RegisterScreenBase(GenericFormScreen):
@@ -13,59 +12,25 @@ class RegisterScreenBase(GenericFormScreen):
     def __init__(self, **kwargs):
         super(RegisterScreenBase, self).__init__(**kwargs)
 
-        self.emailTextField = Builder.load_string(standard_textfield)  # type: MDTextField
-        self.emailTextField.hint_text = "Email"
-        self.emailTextField.helper_text = "Incorrect email"
-        self.emailTextField.max_text_length = 100
-        self.emailTextField.icon_right = "email"
+        self.emailTextField = self.create_email_field()
         self.contentBox.add_widget(self.emailTextField)
 
-        self.passwordTextField = Builder.load_string(standard_textfield)  # type: MDTextField
-        self.passwordTextField.hint_text = "Password"
-        self.passwordTextField.helper_text = "Alphanumeric and special characters only. Between 10 and 50 characters."
-        self.passwordTextField.max_text_length = 50
-        self.passwordTextField.password = True
-        self.passwordTextField.icon_right = "onepassword"
+        self.passwordTextField = self.create_password_field()
         self.contentBox.add_widget(self.passwordTextField)
 
-        self.confirmPasswordTextField = Builder.load_string(standard_textfield)  # type: MDTextField
-        self.confirmPasswordTextField.hint_text = "Confirm Password"
-        self.confirmPasswordTextField.helper_text = "Repeat the password above"
-        self.confirmPasswordTextField.max_text_length = 50
-        self.confirmPasswordTextField.password = True
-        self.confirmPasswordTextField.icon_right = "onepassword"
+        self.confirmPasswordTextField = self.create_confirm_password_field()
         self.contentBox.add_widget(self.confirmPasswordTextField)
 
-        self.nameTextField = Builder.load_string(standard_textfield)  # type: MDTextField
-        self.nameTextField.hint_text = "Name"
-        self.nameTextField.helper_text = "Alphabet characters only. Minimum 2 characters."
-        self.nameTextField.max_text_length = 100
-        self.nameTextField.icon_right = "human"
-        self.nameTextField.input_filter = name_filter
+        self.nameTextField = self.create_name_field()
         self.contentBox.add_widget(self.nameTextField)
 
-        self.weightTextField = Builder.load_string(standard_textfield)  # type: MDTextField
-        self.weightTextField.hint_text = "Weight (KG)"
-        self.weightTextField.helper_text = "Numbers only"
-        self.weightTextField.max_text_length = 3
-        self.weightTextField.icon_right = "scale"
-        self.weightTextField.input_filter = 'int'
+        self.weightTextField = self.create_weight_field()
         self.contentBox.add_widget(self.weightTextField)
 
-        self.heightTextField = Builder.load_string(standard_textfield)  # type: MDTextField
-        self.heightTextField.hint_text = "Height (cm)"
-        self.heightTextField.helper_text = "Numbers only. Minimum is 40. Max is 251."
-        self.heightTextField.max_text_length = 3
-        self.heightTextField.icon_right = "ruler"
-        self.heightTextField.input_filter = 'int'
+        self.heightTextField = self.create_height_field()
         self.contentBox.add_widget(self.heightTextField)
 
-        self.dobTextField = Builder.load_string(standard_textfield)  # type: MDTextField
-        self.dobTextField.hint_text = "Date of birth (DD/MM/YYYY)"
-        self.dobTextField.helper_text = "DD/MM/YYYY Format"
-        self.dobTextField.max_text_length = 10
-        self.dobTextField.icon_right = "calendar"
-        self.dobTextField.input_filter = dob_filter
+        self.dobTextField = self.create_date_field()
         self.contentBox.add_widget(self.dobTextField)
 
         self.genderMale = Builder.load_string(standard_checkbox)  # type: MDCheckbox
@@ -104,62 +69,20 @@ class RegisterScreenBase(GenericFormScreen):
 
     def verify_inputs(self):
         found_error = False
-        if datePattern.search(self.dobTextField.text):
-            self.dobTextField.error = False
-        else:
-            self.dobTextField.error = True
-            found_error = True
-        self.dobTextField.focus = True  # Date verified
-        self.dobTextField.focus = False
 
-        if len(self.passwordTextField.text) < 10:
-            self.passwordTextField.error = True
-            found_error = True
-        else:
-            self.passwordTextField.error = False
-        self.passwordTextField.focus = True  # password at minimum length
-        self.passwordTextField.focus = False
+        self.verify_date(self.dobTextField, found_error)
 
-        if self.passwordTextField.text != self.confirmPasswordTextField:
-            self.confirmPasswordTextField.error = True
-            found_error = True
-        else:
-            self.confirmPasswordTextField.error = False
-        self.confirmPasswordTextField.focus = True  # password at minimum length
-        self.confirmPasswordTextField.focus = False
+        self.verify_password(self.passwordTextField, found_error)
 
-        if len(self.nameTextField.text) < 2:
-            self.nameTextField.error = True
-            found_error = True
-        else:
-            self.nameTextField.error = False
-        self.nameTextField.focus = True  # name at minimum length
-        self.nameTextField.focus = False
+        self.verify_confirmed_password(self.passwordTextField, self.confirmPasswordTextField, found_error)
 
-        if self.heightTextField.text != "" and (
-                int(self.heightTextField.text) < 40 or int(self.heightTextField.text) > 251):
-            self.heightTextField.error = True
-            found_error = True
-        else:
-            self.heightTextField.error = False
-        self.heightTextField.focus = True  # height not empty and bigger than 40
-        self.heightTextField.focus = False
+        self.verify_name(self.nameTextField, found_error)
 
-        if self.weightTextField.text == "":
-            self.weightTextField.error = True
-            found_error = True
-        else:
-            self.weightTextField.error = False
-        self.weightTextField.focus = True  # weight not empty
-        self.weightTextField.focus = False
+        self.verify_height(self.heightTextField, found_error)
 
-        if emailPattern.search(self.emailTextField.text):
-            self.emailTextField.error = False
-        else:
-            self.emailTextField.error = True
-            found_error = True
-        self.emailTextField.focus = True  # email verified
-        self.emailTextField.focus = False
+        self.verify_weight(self.weightTextField, found_error)
+
+        self.verify_email(self.emailTextField, found_error)
 
         if self.genderMale.state == "normal" and self.genderFemale.state == "normal":
             self.genderLabel.text = "You must select a gender"
