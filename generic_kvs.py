@@ -30,3 +30,11 @@ MDIconButton:
     icon: "human"
     pos_hint: {"center_x": .5, "center_y": .5}
 """
+
+standard_spinner = """
+MDSpinner:
+    size_hint: None, None
+    size: dp(50), dp(50)
+    pos_hint: {'center_x': .5, 'center_y': .9}
+    active: False
+"""

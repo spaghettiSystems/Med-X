@@ -43,7 +43,7 @@ class Database:
             output = "Successfully logged in"
 
         except:
-            output = "Invalid Email or password"  # No need to specify exceptions since login problems will always be with email and passwords
+            output = "Invalid Email or Password"  # No need to specify exceptions since login problems will always be with email and passwords
 
         return output
 
@@ -65,7 +65,7 @@ class Database:
         # if file uploaded has same cloud name as a one that alraeady exists an overwrite is done.
         try:
             self.storage.child(media_name_onCloud).put(media_file_name)
-            output = "succefully executed"
+            output = "Successfully executed"
         except FileNotFoundError:
             output = "File doesn't exist"
         return output
@@ -89,25 +89,25 @@ class Database:
             data_dict['Password'] = hashedPassword
 
         except KeyError:
-            print("dictionary doesn't contain a password")
+            print("Dictionary doesn't contain a password")
 
         finally:
 
             self.db.child(table_name).child(PK).set(data_dict)
 
-            return "Registered data succesfully"
+            return "Registered successfully"
 
     def updateData(self, data_dct, table_name,
                    PK):  # To update data you should enter it in a dictionary in this form {'column name':"data to be changed"}
 
         self.db.child(table_name).child(PK).update(data_dct)
 
-        return "Updated data succefully"
+        return "Updated data successfully"
 
     def deleteData(self, PK, table_name):  # No exceptions get thrown so it should be used with real care.
         self.db.child(table_name).child(PK).remove()
 
-        return "Deleted succesfully"
+        return "Deleted successfully"
 
     def getData(self, PK, table_name):  # No exceptions get thrown so it should be used with real care.
         data_dct = self.db.child(table_name).child(PK).get()

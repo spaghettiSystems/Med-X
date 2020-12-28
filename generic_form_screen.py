@@ -3,10 +3,9 @@ from abc import ABCMeta, abstractmethod
 
 from kivy.lang import Builder
 from kivymd.uix.screen import MDScreen
+from kivymd.uix.spinner import MDSpinner
 
-from generic_kvs import standard_vbox
-
-from generic_kvs import standard_textfield
+from generic_kvs import standard_vbox, standard_textfield, standard_spinner
 
 
 class GenericFormScreen(MDScreen):
@@ -19,6 +18,9 @@ class GenericFormScreen(MDScreen):
         self.contentBox = Builder.load_string(standard_vbox)  # type: MDBoxLayout
         self.add_widget(self.contentBox)
 
+        self.spinner = Builder.load_string(standard_spinner)  # type: MDSpinner
+        self.add_widget(self.spinner)
+
     @abstractmethod
     def verify_inputs(self):
         pass
@@ -27,9 +29,19 @@ class GenericFormScreen(MDScreen):
     def get_form_values(self):
         pass
 
-    def verify_and_get_values(self):
+    @abstractmethod
+    def submit_form(self, values):
+        pass
+
+    @abstractmethod
+    def back(self):
+        pass
+
+    def verify_and_submit_values(self, instance):
+        print(self.verify_inputs())
         if self.verify_inputs():
-            return self.get_form_values()
+            self.spinner.active = True
+            self.submit_form(self.get_form_values())
 
     @staticmethod
     def name_filter(string, from_undo):
@@ -59,7 +71,7 @@ class GenericFormScreen(MDScreen):
             date_text_field.error = False
         else:
             date_text_field.error = True
-            found_error = True
+            found_error[0] = True
         date_text_field.focus = True  # Date verified
         date_text_field.focus = False
 
@@ -69,7 +81,7 @@ class GenericFormScreen(MDScreen):
             email_text_field.error = False
         else:
             email_text_field.error = True
-            found_error = True
+            found_error[0] = True
         email_text_field.focus = True  # email verified
         email_text_field.focus = False
 
@@ -77,7 +89,7 @@ class GenericFormScreen(MDScreen):
     def verify_weight(weight_text_field, found_error):
         if weight_text_field.text == "":
             weight_text_field.error = True
-            found_error = True
+            found_error[0] = True
         else:
             weight_text_field.error = False
         weight_text_field.focus = True  # weight not empty
@@ -88,7 +100,7 @@ class GenericFormScreen(MDScreen):
         if height_text_field.text != "" and (
                 int(height_text_field.text) < 40 or int(height_text_field.text) > 251):
             height_text_field.error = True
-            found_error = True
+            found_error[0] = True
         else:
             height_text_field.error = False
         height_text_field.focus = True  # height not empty and bigger than 40
@@ -98,7 +110,7 @@ class GenericFormScreen(MDScreen):
     def verify_name(name_text_field, found_error):
         if len(name_text_field.text) < 2:
             name_text_field.error = True
-            found_error = True
+            found_error[0] = True
         else:
             name_text_field.error = False
         name_text_field.focus = True  # name at minimum length
@@ -108,7 +120,7 @@ class GenericFormScreen(MDScreen):
     def verify_confirmed_password(password_field, verified_password_field, found_error):
         if password_field.text != verified_password_field.text:
             verified_password_field.error = True
-            found_error = True
+            found_error[0] = True
         else:
             verified_password_field.error = False
         verified_password_field.focus = True  # password at minimum length
@@ -118,7 +130,7 @@ class GenericFormScreen(MDScreen):
     def verify_password(password_field, found_error):
         if len(password_field.text) < 10:
             password_field.error = True
-            found_error = True
+            found_error[0] = True
         else:
             password_field.error = False
         password_field.focus = True  # password at minimum length
@@ -192,3 +204,6 @@ class GenericFormScreen(MDScreen):
         email_text_field.max_text_length = 100
         email_text_field.icon_right = "email"
         return email_text_field
+
+    def back_func(self, instance):
+        self.manager.current = self.previous
