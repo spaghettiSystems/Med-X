@@ -27,4 +27,5 @@ def login(instance):
     if screen.verify_inputs():
         login_dict = screen.get_form_values()
         # TODO: DB stuff goes here.
-        database.login(login_dict["Email"],login_dict["Password"])
+        output=database.login(login_dict["Email"],login_dict["Password"])
+        return output
