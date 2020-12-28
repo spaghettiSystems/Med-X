@@ -24,3 +24,9 @@ standard_button = """
 MDRectangleFlatButton:
     pos_hint: {'center_y' : .5}
 """
+
+standard_icon_button = """
+MDIconButton:
+    icon: "human"
+    pos_hint: {"center_x": .5, "center_y": .5}
+"""

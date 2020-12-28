@@ -1,16 +1,31 @@
 from kivy.lang import Builder
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.label import MDLabel
-
+from kivymd.uix.filemanager import MDFileManager
+from kivymd.uix.button import MDRoundFlatIconButton
 from generic_form_screen import GenericFormScreen
 from submission_functions import back, register
-from generic_kvs import standard_checkbox, standard_button
+from generic_kvs import standard_checkbox, standard_button, standard_icon_button
 
 
 class RegisterScreenBase(GenericFormScreen):
 
     def __init__(self, **kwargs):
         super(RegisterScreenBase, self).__init__(**kwargs)
+
+        self.path = '/'
+        self.filePath = ""
+        self.acceptableFiles = (".png", ".jpg", ".jpeg", ".bmp", ".gif")
+        self.file_manager = MDFileManager(
+            exit_manager=lambda *args: self.file_manager.close(),
+            select_path=self.select_path,
+            ext=self.acceptableFiles,
+        )
+
+        self.pic = Builder.load_string(standard_icon_button)  # type: MDRoundFlatIconButton
+        self.pic.bind(on_press=lambda instance: self.file_manager.show(self.path))
+
+        self.contentBox.add_widget(self.pic)
 
         self.emailTextField = self.create_email_field()
         self.contentBox.add_widget(self.emailTextField)
@@ -97,6 +112,7 @@ class RegisterScreenBase(GenericFormScreen):
         if self.genderMale.state == "down":
             gender = "Male"
         formDict = {
+            "Picture": self.filePath,
             "Email": self.emailTextField.text,
             "Password": self.passwordTextField.text,
             "Name": self.nameTextField.text,
@@ -107,3 +123,11 @@ class RegisterScreenBase(GenericFormScreen):
         }
 
         return formDict
+
+    def select_path(self, *args):
+        if args[0].endswith(self.acceptableFiles):
+            self.filePath = args[0]
+            self.pic.icon = self.filePath
+        else:
+            self.path = args[0]
+        self.file_manager.close()
