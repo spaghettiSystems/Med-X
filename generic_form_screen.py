@@ -205,5 +205,5 @@ class GenericFormScreen(MDScreen):
         email_text_field.icon_right = "email"
         return email_text_field
 
-    def back_func(self, instance):
+    def goto_previous_screen(self, instance):
         self.manager.current = self.previous

@@ -67,7 +67,7 @@ class RegisterScreenBase(GenericFormScreen):
 
         self.backButton = Builder.load_string(standard_button)  # type: MDFlatButton
         self.backButton.text = "Back"
-        self.backButton.bind(on_press=partial(self.back_func))
+        self.backButton.bind(on_press=partial(self.goto_previous_screen))
 
         self.buttonBox = MDBoxLayout(pos_hint={'center_x': 0.5, 'center_y': 0.5})
         self.buttonBox.orientation = 'horizontal'
