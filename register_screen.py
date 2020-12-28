@@ -43,37 +43,37 @@ class RegisterScreenBase(GenericFormScreen):
         self.dobTextField = self.create_date_field()
         self.contentBox.add_widget(self.dobTextField)
 
-        self.genderMale = Builder.load_string(standard_checkbox)  # type: MDCheckbox
-        self.genderMale.group = 'gender'
-        self.genderMale.radio_icon_normal = 'gender-male'
-        self.genderFemale = Builder.load_string(standard_checkbox)
-        self.genderFemale.group = 'gender'
-        self.genderFemale.radio_icon_normal = 'gender-female'
+        self.maleGenderRadioButton = Builder.load_string(standard_checkbox)  # type: MDCheckbox
+        self.maleGenderRadioButton.group = 'gender'
+        self.maleGenderRadioButton.radio_icon_normal = 'gender-male'
+        self.femaleGenderRadioButton = Builder.load_string(standard_checkbox)
+        self.femaleGenderRadioButton.group = 'gender'
+        self.femaleGenderRadioButton.radio_icon_normal = 'gender-female'
 
         self.genderLabel = MDLabel(text="")
 
-        self.genderBox = MDBoxLayout(pos_hint={'center_x': 0.5, 'center_y': 0.5})
-        self.genderBox.orientation = 'horizontal'
-        self.genderBox.adaptive_height = False
-        self.genderBox.add_widget(self.genderMale)
-        self.genderBox.add_widget(self.genderFemale)
-        self.genderBox.add_widget(self.genderLabel)
+        self.genderRadioButtonBox = MDBoxLayout(pos_hint={'center_x': 0.5, 'center_y': 0.5})
+        self.genderRadioButtonBox.orientation = 'horizontal'
+        self.genderRadioButtonBox.adaptive_height = False
+        self.genderRadioButtonBox.add_widget(self.maleGenderRadioButton)
+        self.genderRadioButtonBox.add_widget(self.femaleGenderRadioButton)
+        self.genderRadioButtonBox.add_widget(self.genderLabel)
 
-        self.contentBox.add_widget(self.genderBox)
+        self.contentBox.add_widget(self.genderRadioButtonBox)
 
-        self.submit = Builder.load_string(standard_button)  # type: MDFlatButton
-        self.submit.text = "Register"
-        self.submit.bind(on_press=partial(self.verify_and_submit_values))
+        self.submitButton = Builder.load_string(standard_button)  # type: MDFlatButton
+        self.submitButton.text = "Register"
+        self.submitButton.bind(on_press=partial(self.verify_and_submit_values))
 
-        self.back = Builder.load_string(standard_button)  # type: MDFlatButton
-        self.back.text = "Back"
-        self.back.bind(on_press=partial(self.back_func))
+        self.backButton = Builder.load_string(standard_button)  # type: MDFlatButton
+        self.backButton.text = "Back"
+        self.backButton.bind(on_press=partial(self.back_func))
 
         self.buttonBox = MDBoxLayout(pos_hint={'center_x': 0.5, 'center_y': 0.5})
         self.buttonBox.orientation = 'horizontal'
         self.buttonBox.adaptive_height = False
-        self.buttonBox.add_widget(self.back)
-        self.buttonBox.add_widget(self.submit)
+        self.buttonBox.add_widget(self.backButton)
+        self.buttonBox.add_widget(self.submitButton)
 
         self.contentBox.add_widget(self.buttonBox)
 
@@ -94,7 +94,7 @@ class RegisterScreenBase(GenericFormScreen):
 
         self.verify_email(self.emailTextField, found_error)
 
-        if self.genderMale.state == "normal" and self.genderFemale.state == "normal":
+        if self.maleGenderRadioButton.state == "normal" and self.femaleGenderRadioButton.state == "normal":
             self.genderLabel.text = "You must select a gender"
             found_error[0] = True
         else:
@@ -104,7 +104,7 @@ class RegisterScreenBase(GenericFormScreen):
 
     def get_form_values(self):
         gender = "Female"
-        if self.genderMale.state == "down":
+        if self.maleGenderRadioButton.state == "down":
             gender = "Male"
         formDict = {
             "Picture": self.filePicker.filePath,

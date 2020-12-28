@@ -22,19 +22,19 @@ class LoginScreenBase(GenericFormScreen):
         self.passwordTextField = self.create_password_field()
         self.contentBox.add_widget(self.passwordTextField)
 
-        self.submit = Builder.load_string(standard_button)
-        self.submit.text = "Login"
-        self.submit.bind(on_press=partial(self.verify_and_submit_values))
+        self.submitButton = Builder.load_string(standard_button)
+        self.submitButton.text = "Login"
+        self.submitButton.bind(on_press=partial(self.verify_and_submit_values))
 
-        self.back = Builder.load_string(standard_button)
-        self.back.text = "Back"
-        self.back.bind(on_press=partial(self.back_func))
+        self.backButton = Builder.load_string(standard_button)
+        self.backButton.text = "Back"
+        self.backButton.bind(on_press=partial(self.back_func))
 
         self.buttonBox = MDBoxLayout(pos_hint={'center_x': 0.5, 'center_y': 0.5})
         self.buttonBox.orientation = 'horizontal'
         self.buttonBox.adaptive_height = False
-        self.buttonBox.add_widget(self.back)
-        self.buttonBox.add_widget(self.submit)
+        self.buttonBox.add_widget(self.backButton)
+        self.buttonBox.add_widget(self.submitButton)
 
         self.contentBox.add_widget(self.buttonBox)
 
